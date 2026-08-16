@@ -1,0 +1,97 @@
+.menu {
+  min-height: 100vh;
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+}
+
+.menu__header {
+  padding: 72px 8%;
+}
+
+.menu__eyebrow {
+  margin: 0 0 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.menu__title {
+  margin: 0;
+  font-size: clamp(72px, 10vw, 150px);
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+}
+
+.menu__description {
+  max-width: 560px;
+  margin: 32px 0 0;
+  font-size: clamp(18px, 2vw, 26px);
+  line-height: 1.3;
+}
+
+.menu__sections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.menu-section {
+  min-height: 420px;
+  padding: 48px;
+  border-top: 2px solid var(--color-brown);
+  border-right: 2px solid var(--color-brown);
+}
+
+.menu-section:nth-child(1) {
+  background-color: var(--color-pink);
+}
+
+.menu-section:nth-child(2) {
+  background-color: var(--color-acid);
+}
+
+.menu-section:nth-child(3) {
+  background-color: var(--color-green);
+  color: var(--color-cream);
+}
+
+.menu-section__title {
+  margin: 0 0 48px;
+  font-size: clamp(36px, 4vw, 60px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.menu-section__items {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.menu-section__items p {
+  margin: 0;
+  padding-bottom: 14px;
+  border-bottom: 1px solid currentColor;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 800px) {
+  .menu__sections {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-section {
+    min-height: auto;
+    padding: 40px 24px;
+    border-right: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .menu__header {
+    padding: 56px 16px;
+  }
+
+  .menu-section {
+    padding: 36px 16px;
+  }
+}

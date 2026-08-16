@@ -1,0 +1,125 @@
+.about {
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+}
+
+.about__hero {
+  padding: 80px 8%;
+  background-color: var(--color-cream);
+}
+
+.about__eyebrow {
+  margin: 0 0 20px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.about__title {
+  margin: 0;
+  font-size: clamp(64px, 9vw, 140px);
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+}
+
+.about__intro {
+  max-width: 650px;
+  margin: 40px 0 0;
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.35;
+}
+
+.about__story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  padding: 80px 8%;
+  background-color: var(--color-pink);
+}
+
+.about__subtitle {
+  margin: 0;
+  font-size: clamp(48px, 6vw, 90px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.about__story-text {
+  align-self: end;
+  max-width: 600px;
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.45;
+}
+
+.about__story-text p {
+  margin: 0 0 24px;
+}
+
+.about__statement {
+  padding: 56px 8%;
+  background-color: var(--color-acid);
+  text-align: center;
+}
+
+.about__statement p {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media screen and (max-width: 800px) {
+  .about__hero {
+    padding: 56px 24px;
+  }
+
+  .about__story {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 56px 24px;
+  }
+
+  .about__story-text {
+    max-width: none;
+  }
+
+  .about__statement {
+    padding: 40px 24px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .about__hero {
+    padding: 48px 16px;
+  }
+
+  .about__title {
+    font-size: clamp(52px, 18vw, 72px);
+  }
+
+  .about__intro {
+    margin-top: 28px;
+    font-size: 18px;
+  }
+
+  .about__story {
+    padding: 48px 16px;
+  }
+
+  .about__subtitle {
+    font-size: 48px;
+  }
+
+  .about__story-text {
+    font-size: 17px;
+  }
+
+  .about__statement {
+    padding: 36px 16px;
+  }
+
+  .about__statement p {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+}

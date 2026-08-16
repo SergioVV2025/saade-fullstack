@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "BitCount";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("./fonts/BitcountPropSingle.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sekuya";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/Sekuya-Regular.woff2") format("woff2");
+}
