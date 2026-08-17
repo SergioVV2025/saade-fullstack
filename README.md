@@ -1,17 +1,26 @@
 # Saade
 
-Aplicación web para Saade, un restaurante ubicado en Silver Lake, Los Angeles.
+Aplicación full stack para Saade, un restaurante ubicado en Silver Lake, Los Angeles.
+
+## Demo
+
+Frontend:  
+https://sergiovv2026.paranormalgroup.com
+
+API:  
+https://api.sergiovv2026.paranormalgroup.com
 
 ## Funcionalidades
 
 - Navegación entre las distintas secciones del restaurante.
-- Menú gastronómico.
-- Información sobre Saade.
+- Diseño responsive desde 320 px.
+- Menú e información sobre Saade.
 - Formulario de reservaciones con validación del lado del cliente.
-- Creación de reservaciones mediante una API propia.
+- Creación y almacenamiento de reservaciones mediante una API propia.
 - Confirmación de reservaciones mediante una ventana modal.
 - Búsqueda de eventos en Los Angeles mediante Ticketmaster Discovery API.
-- Diseño responsive desde 320 px.
+- Estados de carga, error y resultados vacíos.
+- Visualización inicial de tres eventos y botón "Mostrar más".
 
 ## Tecnologías
 
@@ -33,45 +42,71 @@ Aplicación web para Saade, un restaurante ubicado en Silver Lake, Los Angeles.
 - Express
 - MongoDB
 - Mongoose
+- JWT
+- bcrypt
 
-## Estructura del proyecto
+### Deploy
 
-    Sprint20/
-    ├── backend/
-    ├── frontend/
-    ├── .gitignore
-    ├── package.json
-    └── README.md
+- Google Cloud Compute Engine
+- Nginx
+- PM2
+- Certbot / Let's Encrypt
+- FreeDNS
+
+## Estructura
+
+```text
+Sprint20/
+├── backend/
+├── frontend/
+├── .gitignore
+├── package.json
+└── README.md
+```
 
 ## Variables de entorno
 
-El proyecto utiliza variables de entorno que no se incluyen en el repositorio.
+Las variables de entorno no se incluyen en el repositorio.
 
-Frontend:
+### Frontend
 
-    VITE_TICKETMASTER_API_KEY=
-    VITE_API_BASE_URL=
+```env
+VITE_TICKETMASTER_API_KEY=
+VITE_API_BASE_URL=
+```
+
+### Backend
+
+```env
+PORT=
+MONGO_URL=
+JWT_SECRET=
+```
 
 ## Ejecución local
 
-Instalar las dependencias:
+### Frontend
 
-    npm install
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Ejecutar el frontend:
+### Backend
 
-    cd frontend
-    npm run dev
-
-Ejecutar el backend:
-
-    cd backend
-    npm run dev
+```bash
+cd backend
+npm install
+npm run dev
+```
 
 ## Build de producción
 
-    cd frontend
-    npm run build
+```bash
+cd frontend
+npm run build
+```
 
 ## Autor
 
