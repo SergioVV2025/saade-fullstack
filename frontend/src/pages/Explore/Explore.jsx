@@ -6,7 +6,7 @@ import SearchForm from "../../components/SearchForm/SearchForm";
 
 function Explore() {
   const [events, setEvents] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleEvents, setVisibleEvents] = useState(3);
 
@@ -26,7 +26,29 @@ function Explore() {
   }
 
   useEffect(() => {
-    loadEvents();
+    let isActive = true;
+
+    getEvents("")
+      .then((data) => {
+        if (isActive) {
+          setEvents(data._embedded?.events || []);
+        }
+      })
+      .catch((err) => {
+        if (isActive) {
+          setError(err);
+          setEvents([]);
+        }
+      })
+      .finally(() => {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   function handleSearch(keyword) {
