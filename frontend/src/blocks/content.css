@@ -1,0 +1,61 @@
+.content {
+  width: 100%;
+}
+
+:root {
+  --color-pink: #e9a3c4;
+  --color-acid: #c7ef4a;
+  --color-brown: #3b170d;
+  --color-green: #176348;
+  --color-cream: #f3f0df;
+
+  /* --font-primary: "Montserrat", Arial, sans-serif; */
+  --font-primary: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+  font-family: var(--font-primary);
+}
+
+.home-section {
+  padding: 80px 8%;
+}
+
+.home-section_menu {
+  background-color: var(--color-cream);
+}
+
+.home-section_reservation {
+  background-color: var(--color-green);
+  color: var(--color-pink);
+}
+
+.home-section__eyebrow {
+  margin: 0 0 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.home-section__title {
+  max-width: 850px;
+  margin: 0;
+  font-size: clamp(48px, 7vw, 100px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.home-section__link {
+  display: inline-block;
+  margin-top: 28px;
+  color: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  text-underline-offset: 5px;
+}
