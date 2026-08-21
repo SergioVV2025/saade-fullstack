@@ -16,6 +16,7 @@ const createReservation = async (req, res) => {
       date,
       time,
       guests,
+      owner: req.user._id,
     });
     res.status(201).json({
       name: newReservation.name,
@@ -31,4 +32,46 @@ const createReservation = async (req, res) => {
   }
 };
 
-export default { createReservation };
+const getReservations = async (req, res) => {
+  try {
+    const reservations = await Reservation.find({ owner: req.user._id });
+    res.status(200).json(reservations);
+  } catch (err) {
+    console.error("Error al obtener las reservas:", err);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
+};
+
+const deleteReservation = async (req, res) => {
+  try {
+    const reservation = await Reservation.findById(
+      req.params.reservationId,
+    ).orFail();
+
+    if (String(reservation.owner) !== String(req.user._id)) {
+      return res.status(403).json({
+        message: "No tienes permiso para cancelar esta reserva.",
+      });
+    }
+
+    await Reservation.findByIdAndDelete(req.params.reservationId).orFail();
+
+    return res.status(200).json({
+      message: "Reserva cancelada correctamente.",
+    });
+  } catch (err) {
+    if (err.name === "CastError") {
+      return res.status(400).json({ message: "ID de reserva inválido." });
+    }
+
+    if (err.name === "DocumentNotFoundError") {
+      return res.status(404).json({ message: "Reserva no encontrada." });
+    }
+
+    return res.status(500).json({
+      message: "Error interno del servidor.",
+    });
+  }
+};
+
+export default { createReservation, getReservations, deleteReservation };

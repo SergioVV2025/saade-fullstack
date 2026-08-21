@@ -20,11 +20,9 @@ app.use(express.json());
 
 app.use("/", users);
 
-// Reservas públicas
-app.use("/", reservations);
-
-// Desde aquí, lo que quede abajo estará protegido
 app.use(auth);
+
+app.use("/", reservations);
 
 // Futuras rutas privadas aquí
 // app.use("/me", protectedUserRoutes);

@@ -43,6 +43,12 @@ const reservationSchema = new mongoose.Schema({
     min: 1,
     max: 20,
   },
+
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+  },
 });
 
 export default mongoose.model("reservation", reservationSchema);
