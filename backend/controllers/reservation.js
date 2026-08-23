@@ -74,4 +74,62 @@ const deleteReservation = async (req, res) => {
   }
 };
 
-export default { createReservation, getReservations, deleteReservation };
+const updateReservation = async (req, res) => {
+  try {
+    const { name, email, phone, date, time, guests } = req.body;
+
+    const reservation = await Reservation.findById(
+      req.params.reservationId,
+    ).orFail();
+
+    if (String(reservation.owner) !== String(req.user._id)) {
+      return res.status(403).json({
+        message: "No tienes permiso para actualizar esta reserva.",
+      });
+    }
+
+    const allowedUpdates = ["name", "email", "phone", "date", "time", "guests"];
+    const updates = {};
+
+    allowedUpdates.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updates[field] = req.body[field];
+      }
+    });
+
+    const updatedReservation = await Reservation.findByIdAndUpdate(
+      req.params.reservationId,
+      updates,
+      { new: true, runValidators: true },
+    ).orFail();
+
+    return res.status(200).json(updatedReservation);
+  } catch (err) {
+    if (err.name === "CastError") {
+      return res.status(400).json({
+        message: "ID de reserva inválido.",
+      });
+    }
+
+    if (err.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Datos de reserva inválidos.",
+      });
+    }
+
+    if (err.name === "DocumentNotFoundError") {
+      return res.status(404).json({ message: "Reserva no encontrada." });
+    }
+
+    return res.status(500).json({
+      message: "Error interno del servidor.",
+    });
+  }
+};
+
+export default {
+  createReservation,
+  getReservations,
+  deleteReservation,
+  updateReservation,
+};
