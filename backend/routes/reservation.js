@@ -1,10 +1,31 @@
 import express from "express";
 const router = express.Router();
 import controllers from "../controllers/reservation.js";
+import {
+  validateReservationId,
+  validateReservation,
+  validateReservationUpdate,
+} from "../middlewares/validation.js";
 
-router.post("/reservations", controllers.createReservation);
+router.post(
+  "/reservations",
+  validateReservation,
+  controllers.createReservation,
+);
+
 router.get("/reservations", controllers.getReservations);
-router.delete("/reservations/:reservationId", controllers.deleteReservation);
-router.patch("/reservations/:reservationId", controllers.updateReservation);
+
+router.delete(
+  "/reservations/:reservationId",
+  validateReservationId,
+  controllers.deleteReservation,
+);
+
+router.patch(
+  "/reservations/:reservationId",
+  validateReservationId,
+  validateReservationUpdate,
+  controllers.updateReservation,
+);
 
 export default router;

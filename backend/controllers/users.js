@@ -4,11 +4,7 @@ import jsonwebtoken from "jsonwebtoken";
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Las contraseñas no coinciden!" });
-    }
-
+    const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       name,
