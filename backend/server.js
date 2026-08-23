@@ -24,10 +24,6 @@ app.use(auth);
 
 app.use("/", reservations);
 
-// Futuras rutas privadas aquí
-// app.use("/me", protectedUserRoutes);
-// app.use("/my-reservations", protectedReservations);
-
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

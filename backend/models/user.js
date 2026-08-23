@@ -24,11 +24,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
-
-  confirmPassword: {
-    type: String,
-    required: true,
-  },
 });
 
 export default mongoose.model("user", userSchema);
