@@ -1,13 +1,8 @@
 import Reservation from "../models/reservation.js";
 
-const createReservation = async (req, res) => {
+const createReservation = async (req, res, next) => {
   try {
     const { name, email, phone, date, time, guests } = req.body;
-
-    // Validar los datos de entrada
-    // if (!name || !email || !phone || !date || !time || !guests) {
-    //   return res.status(400).json({ message: "Todos los campos son obligatorios." });
-    // }
 
     const newReservation = await Reservation.create({
       name,
@@ -28,30 +23,36 @@ const createReservation = async (req, res) => {
     });
   } catch (err) {
     console.error("Error al crear la reserva:", err);
-    res.status(500).json({ message: "Error interno del servidor." });
+    if (err.name === "ValidationError") {
+      err.statusCode = 400;
+      err.message = "Datos de reserva inválidos.";
+    }
+
+    next(err);
   }
 };
 
-const getReservations = async (req, res) => {
+const getReservations = async (req, res, next) => {
   try {
     const reservations = await Reservation.find({ owner: req.user._id });
     res.status(200).json(reservations);
   } catch (err) {
     console.error("Error al obtener las reservas:", err);
-    res.status(500).json({ message: "Error interno del servidor." });
+
+    next(err);
   }
 };
 
-const deleteReservation = async (req, res) => {
+const deleteReservation = async (req, res, next) => {
   try {
     const reservation = await Reservation.findById(
       req.params.reservationId,
     ).orFail();
 
     if (String(reservation.owner) !== String(req.user._id)) {
-      return res.status(403).json({
-        message: "No tienes permiso para cancelar esta reserva.",
-      });
+      const error = new Error("No tienes permiso para cancelar esta reserva.");
+      error.statusCode = 403;
+      throw error;
     }
 
     await Reservation.findByIdAndDelete(req.params.reservationId).orFail();
@@ -61,31 +62,29 @@ const deleteReservation = async (req, res) => {
     });
   } catch (err) {
     if (err.name === "CastError") {
-      return res.status(400).json({ message: "ID de reserva inválido." });
+      err.statusCode = 400;
+      err.message = "ID de reserva inválido.";
+    } else if (err.name === "DocumentNotFoundError") {
+      err.statusCode = 404;
+      err.message = "Reserva no encontrada.";
     }
 
-    if (err.name === "DocumentNotFoundError") {
-      return res.status(404).json({ message: "Reserva no encontrada." });
-    }
-
-    return res.status(500).json({
-      message: "Error interno del servidor.",
-    });
+    next(err);
   }
 };
 
-const updateReservation = async (req, res) => {
+const updateReservation = async (req, res, next) => {
   try {
-    const { name, email, phone, date, time, guests } = req.body;
-
     const reservation = await Reservation.findById(
       req.params.reservationId,
     ).orFail();
 
     if (String(reservation.owner) !== String(req.user._id)) {
-      return res.status(403).json({
-        message: "No tienes permiso para actualizar esta reserva.",
-      });
+      const error = new Error(
+        "No tienes permiso para actualizar esta reserva.",
+      );
+      error.statusCode = 403;
+      throw error;
     }
 
     const allowedUpdates = ["name", "email", "phone", "date", "time", "guests"];
@@ -106,24 +105,21 @@ const updateReservation = async (req, res) => {
     return res.status(200).json(updatedReservation);
   } catch (err) {
     if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "ID de reserva inválido.",
-      });
+      err.message = "ID de reserva inválido.";
+      err.statusCode = 400;
     }
 
     if (err.name === "ValidationError") {
-      return res.status(400).json({
-        message: "Datos de reserva inválidos.",
-      });
+      err.message = "Datos de reserva inválidos.";
+      err.statusCode = 400;
     }
 
     if (err.name === "DocumentNotFoundError") {
-      return res.status(404).json({ message: "Reserva no encontrada." });
+      err.message = "Reserva no encontrada.";
+      err.statusCode = 404;
     }
 
-    return res.status(500).json({
-      message: "Error interno del servidor.",
-    });
+    next(err);
   }
 };
 

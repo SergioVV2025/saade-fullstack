@@ -8,6 +8,7 @@ import reservations from "./routes/reservation.js";
 import users from "./routes/users.js";
 import connectDB from "./utils/db.js";
 import auth from "./middlewares/auth.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 const { PORT = 3001 } = process.env;
 
@@ -23,6 +24,8 @@ app.use("/", users);
 app.use(auth);
 
 app.use("/", reservations);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
