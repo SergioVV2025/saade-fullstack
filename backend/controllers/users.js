@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
+import { JWT_SECRET } from "../utils/config.js";
 
 const createUser = async (req, res, next) => {
   try {
@@ -53,7 +54,7 @@ const login = async (req, res, next) => {
       throw error;
     }
 
-    const token = jsonwebtoken.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    const token = jsonwebtoken.sign({ _id: user._id }, JWT_SECRET, {
       expiresIn: "7d",
     });
 

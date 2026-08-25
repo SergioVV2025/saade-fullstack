@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../utils/config.js";
 
 const handleAuthError = (res, statusCode) => {
   res.status(statusCode).send({ message: "Error de autorización!" });
@@ -19,7 +20,7 @@ export default (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, process.env.JWT_SECRET);
+    payload = jwt.verify(token, JWT_SECRET);
   } catch {
     return handleAuthError(res, 403);
   }

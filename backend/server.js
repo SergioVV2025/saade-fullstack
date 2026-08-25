@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import { PORT } from "./utils/config.js";
 
 import express from "express";
 import cors from "cors";
@@ -10,8 +9,6 @@ import connectDB from "./utils/db.js";
 import auth from "./middlewares/auth.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import { requestLogger, errorLogger } from "./middlewares/logger.js";
-
-const { PORT = 3001 } = process.env;
 
 connectDB();
 
