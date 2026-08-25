@@ -10,6 +10,14 @@ import helmet from "helmet";
 
 const app = express();
 
+app.set("trust proxy", 1);
+
+// app.use((req, res, next) => {
+//   console.log("req.ip:", req.ip);
+//   console.log("req.ips:", req.ips);
+//   next();
+// });
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
