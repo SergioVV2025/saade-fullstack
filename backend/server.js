@@ -9,6 +9,7 @@ import users from "./routes/users.js";
 import connectDB from "./utils/db.js";
 import auth from "./middlewares/auth.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import { requestLogger, errorLogger } from "./middlewares/logger.js";
 
 const { PORT = 3001 } = process.env;
 
@@ -19,12 +20,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(requestLogger);
+
 app.use("/", users);
 
 app.use(auth);
 
 app.use("/", reservations);
 
+app.use(errorLogger);
 app.use(errorHandler);
 
 app.listen(PORT, () => {

@@ -20,7 +20,7 @@ export default (req, res, next) => {
 
   try {
     payload = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
+  } catch {
     return handleAuthError(res, 403);
   }
 

@@ -1,4 +1,5 @@
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
+  // _next para que pase eslint sin error
   const { statusCode = 500, message } = err;
 
   res.status(statusCode).json({
