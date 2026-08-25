@@ -10,24 +10,27 @@ import {
 } from "../middlewares/validation.js";
 
 import auth from "../middlewares/auth.js";
-router.use(auth);
+// router.use(auth);
 
 router.post(
   "/reservations",
+  auth,
   validateReservation,
   controllers.createReservation,
 );
 
-router.get("/reservations", controllers.getReservations);
+router.get("/reservations", auth, controllers.getReservations);
 
 router.delete(
   "/reservations/:reservationId",
+  auth,
   validateReservationId,
   controllers.deleteReservation,
 );
 
 router.patch(
   "/reservations/:reservationId",
+  auth,
   validateReservationId,
   validateReservationUpdate,
   controllers.updateReservation,

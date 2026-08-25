@@ -1,12 +1,11 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 
 import routes from "./routes/index.js";
-
 import errorHandler from "./middlewares/errorHandler.js";
 import { requestLogger, errorLogger } from "./middlewares/logger.js";
-
-import helmet from "helmet";
+import { NotFoundError } from "./errors/index.js";
 
 const app = express();
 
@@ -25,6 +24,11 @@ app.use(express.json());
 app.use(requestLogger);
 
 app.use("/", routes);
+
+// Si llegamos hasta aquí, ninguna ruta respondió
+app.use((req, res, next) => {
+  next(new NotFoundError("Recurso solicitado no encontrado."));
+});
 
 app.use(errorLogger);
 app.use(errorHandler);
