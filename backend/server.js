@@ -1,32 +1,8 @@
+import app from "./app.js";
+import connectDB from "./utils/db.js";
 import { PORT } from "./utils/config.js";
 
-import express from "express";
-import cors from "cors";
-
-import reservations from "./routes/reservation.js";
-import users from "./routes/users.js";
-import connectDB from "./utils/db.js";
-import auth from "./middlewares/auth.js";
-import errorHandler from "./middlewares/errorHandler.js";
-import { requestLogger, errorLogger } from "./middlewares/logger.js";
-
 connectDB();
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-app.use(requestLogger);
-
-app.use("/", users);
-
-app.use(auth);
-
-app.use("/", reservations);
-
-app.use(errorLogger);
-app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

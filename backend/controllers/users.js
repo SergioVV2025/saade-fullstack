@@ -2,6 +2,12 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import { JWT_SECRET } from "../utils/config.js";
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors/index.js";
 
 const createUser = async (req, res, next) => {
   try {
@@ -12,22 +18,20 @@ const createUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
-    res.status(201).json({
+    return res.status(201).json({
       name: newUser.name,
       email: newUser.email,
       _id: newUser._id,
     });
   } catch (err) {
-    console.error("Error al crear el usuario:", err);
-
     if (err.name === "ValidationError") {
-      err.statusCode = 400;
-      err.message = "Datos de usuario inválidos.";
+      return next(new BadRequestError("Datos de usuario inválidos."));
     }
 
     if (err.code === 11000) {
-      err.statusCode = 409;
-      err.message = "El correo electrónico ya está registrado.";
+      return next(
+        new ConflictError("El correo electrónico ya está registrado."),
+      );
     }
 
     next(err);
@@ -41,17 +45,13 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      const error = new Error("Correo y/o contraseña incorrectos!");
-      error.statusCode = 401;
-      throw error;
+      throw new UnauthorizedError("Correo y/o contraseña incorrectos!");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      const error = new Error("Correo y/o contraseña incorrectos!");
-      error.statusCode = 401;
-      throw error;
+      throw new UnauthorizedError("Correo y/o contraseña incorrectos!");
     }
 
     const token = jsonwebtoken.sign({ _id: user._id }, JWT_SECRET, {
@@ -77,8 +77,7 @@ const getCurrentUser = async (req, res, next) => {
     });
   } catch (err) {
     if (err.name === "DocumentNotFoundError") {
-      err.message = "Usuario no encontrado.";
-      err.statusCode = 404;
+      return next(new NotFoundError("Usuario no encontrado."));
     }
 
     next(err);

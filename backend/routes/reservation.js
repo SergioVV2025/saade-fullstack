@@ -1,11 +1,16 @@
 import express from "express";
 const router = express.Router();
+
 import controllers from "../controllers/reservation.js";
+
 import {
   validateReservationId,
   validateReservation,
   validateReservationUpdate,
 } from "../middlewares/validation.js";
+
+import auth from "../middlewares/auth.js";
+router.use(auth);
 
 router.post(
   "/reservations",
