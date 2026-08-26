@@ -8,6 +8,6 @@ import { loginLimiter, signupLimiter } from "../middlewares/rateLimiter.js";
 
 router.post("/signup", signupLimiter, validateSignup, controllers.createUser);
 router.post("/signin", loginLimiter, validateSignin, controllers.login);
-router.get("/me", auth, controllers.getCurrentUser);
+router.get("/users/me", auth, controllers.getCurrentUser);
 
 export default router;
