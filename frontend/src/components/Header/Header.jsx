@@ -30,7 +30,11 @@ function Header({ isLoggedIn, currentUser, onSigninClick, onSignout }) {
         <NavLink to="/explore" className={customClassName}>
           Explorar
         </NavLink>
-
+        {isLoggedIn && (
+          <NavLink to="/my-reservations" className={customClassName}>
+            Mis reservaciones
+          </NavLink>
+        )}
         {isLoggedIn ? (
           <div className="header__user">
             <span className="header__username">Hola, {currentUser?.name}</span>

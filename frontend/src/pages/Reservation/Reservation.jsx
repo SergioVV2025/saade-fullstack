@@ -5,7 +5,7 @@ import {
   validateForm,
 } from "../../utils/validation";
 import Popup from "../../components/Popup/Popup";
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { createReservation } from "../../utils/reservations.js";
 
 function Reservation() {
   const [formData, setFormData] = useState({
@@ -27,6 +27,7 @@ function Reservation() {
   });
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [confirmedReservation, setConfirmedReservation] = useState(null);
 
   const reservationTimes = [
     "12:00",
@@ -117,19 +118,31 @@ function Reservation() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/reservations`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const token = localStorage.getItem("jwt");
 
-      if (!response.ok) {
-        throw new Error("No se pudo crear la reserva.");
-      }
+      await createReservation(formData, token);
+
+      setConfirmedReservation(formData);
 
       setIsConfirmationOpen(true);
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        time: "",
+        guests: 2,
+      });
+
+      setErrors({
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        time: "",
+        guests: "",
+      });
     } catch (error) {
       console.error("Error al crear la reserva:", error);
     }
@@ -278,10 +291,10 @@ function Reservation() {
         onClose={() => setIsConfirmationOpen(false)}
       >
         <h2>¡Reserva confirmada!</h2>
-        <p>Nombre: {formData.name}</p>
-        <p>Fecha: {formData.date}</p>
-        <p>Hora: {formData.time}</p>
-        <p>Personas: {formData.guests}</p>
+        <p>Nombre: {confirmedReservation?.name}</p>
+        <p>Fecha: {confirmedReservation?.date}</p>
+        <p>Hora: {confirmedReservation?.time}</p>
+        <p>Personas: {confirmedReservation?.guests}</p>
       </Popup>
     </main>
   );

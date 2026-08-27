@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Header from "./components/Header/Header";
@@ -13,6 +13,8 @@ import Explore from "./pages/Explore/Explore";
 import SigninPopup from "./components/SigninPopup/SigninPopup";
 import SignupPopup from "./components/SignupPopup/SignupPopup";
 import { signin, signup, getCurrentUser } from "./utils/auth";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import MyReservations from "./pages/MyReservations/MyReservations";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -21,6 +23,8 @@ function App() {
   const [isSigninPopupOpen, setIsSigninPopupOpen] = useState(false);
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);
   const [authError, setAuthError] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -84,6 +88,7 @@ function App() {
     localStorage.removeItem("jwt");
     setCurrentUser(null);
     setIsLoggedIn(false);
+    navigate("/");
   }
 
   function handleSigninClick() {
@@ -120,7 +125,22 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/about" element={<About />} />
-        <Route path="/reservation" element={<Reservation />} />
+        <Route
+          path="/reservation"
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <Reservation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-reservations"
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <MyReservations />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/explore" element={<Explore />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
