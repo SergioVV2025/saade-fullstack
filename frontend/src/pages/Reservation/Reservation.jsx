@@ -29,6 +29,8 @@ function Reservation() {
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [confirmedReservation, setConfirmedReservation] = useState(null);
+  const [reservationError, setReservationError] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -93,12 +95,14 @@ function Reservation() {
     }
 
     try {
+      setReservationError("");
+      setIsCreating(true);
+
       const token = localStorage.getItem("jwt");
 
       await createReservation(formData, token);
 
       setConfirmedReservation(formData);
-
       setIsConfirmationOpen(true);
 
       setFormData({
@@ -119,7 +123,9 @@ function Reservation() {
         guests: "",
       });
     } catch (error) {
-      console.error("Error al crear la reserva:", error);
+      setReservationError(error.message);
+    } finally {
+      setIsCreating(false);
     }
   }
 
@@ -256,9 +262,16 @@ function Reservation() {
           <span className="reservation__error">{errors.guests}</span>
         </div>
 
-        <button className="reservation__button" type="submit">
-          Reservar
+        <button
+          className="reservation__button"
+          type="submit"
+          disabled={isCreating}
+        >
+          {isCreating ? "Reservando..." : "Reservar"}
         </button>
+        {reservationError && (
+          <p className="reservation__error">{reservationError}</p>
+        )}
       </form>
 
       <Popup
