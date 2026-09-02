@@ -1,3 +1,5 @@
+import { reservationTimes } from "./reservationConstants";
+
 export function validateText({ value, fieldName, minLength, maxLength }) {
   const trimmedValue = value.trim();
 
@@ -54,8 +56,8 @@ export function validateForm(formData) {
 
     time: !formData.time
       ? "La hora es obligatoria."
-      : formData.time < "12:00" || formData.time > "23:00"
-        ? "Selecciona una hora entre 12:00 y 23:00."
+      : !reservationTimes.includes(formData.time)
+        ? "Selecciona un horario válido."
         : "",
 
     guests: !formData.guests

@@ -1,6 +1,32 @@
 import validator from "validator";
 import mongoose from "mongoose";
 
+const reservationTimes = [
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+  "14:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30",
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
+  "20:00",
+  "20:30",
+  "21:00",
+  "21:30",
+  "22:00",
+  "22:30",
+  "23:00",
+];
+
 const validateSignup = (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
 
@@ -56,6 +82,7 @@ function validateReservationId(req, res, next) {
 
 const validateReservation = (req, res, next) => {
   const { name, email, phone, date, time, guests } = req.body;
+  const today = new Date().toISOString().split("T")[0];
 
   if (!name || !email || !phone || !date || !time || guests === undefined) {
     return res.status(400).send({
@@ -75,6 +102,18 @@ const validateReservation = (req, res, next) => {
     });
   }
 
+  if (date < today) {
+    return res.status(400).send({
+      message: "La fecha no puede ser anterior a hoy.",
+    });
+  }
+
+  if (!reservationTimes.includes(time)) {
+    return res.status(400).send({
+      message: "El horario seleccionado no es válido.",
+    });
+  }
+
   const guestsNumber = Number(guests);
 
   if (
@@ -91,7 +130,8 @@ const validateReservation = (req, res, next) => {
 };
 
 const validateReservationUpdate = (req, res, next) => {
-  const { name, email, guests } = req.body;
+  const { name, email, date, time, guests } = req.body;
+  const today = new Date().toISOString().split("T")[0];
 
   if (name !== undefined && !validator.isLength(name, { min: 2, max: 40 })) {
     return res.status(400).send({
@@ -102,6 +142,20 @@ const validateReservationUpdate = (req, res, next) => {
   if (email !== undefined && !validator.isEmail(email)) {
     return res.status(400).send({
       message: "Correo electrónico inválido!",
+    });
+  }
+
+  if (date !== undefined) {
+    if (date < today) {
+      return res.status(400).send({
+        message: "La fecha no puede ser anterior a hoy.",
+      });
+    }
+  }
+
+  if (time !== undefined && !reservationTimes.includes(time)) {
+    return res.status(400).send({
+      message: "El horario seleccionado no es válido.",
     });
   }
 

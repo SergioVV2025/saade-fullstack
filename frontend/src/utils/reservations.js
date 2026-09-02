@@ -4,8 +4,8 @@ const createReservation = async (reservationData, token) => {
   const response = await fetch(`${BASE_URL}/reservations`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(reservationData),
   });
@@ -36,4 +36,45 @@ const getReservations = async (token) => {
   return data;
 };
 
-export { createReservation, getReservations };
+const deleteReservation = async (reservationId, token) => {
+  const response = await fetch(`${BASE_URL}/reservations/${reservationId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "No se pudo borrar la reserva.");
+  }
+
+  return data;
+};
+
+const updateReservation = async (reservationId, data, token) => {
+  const response = await fetch(`${BASE_URL}/reservations/${reservationId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const newData = await response.json();
+
+  if (!response.ok) {
+    throw new Error(newData.message || "No se pudo actualizar la reserva.");
+  }
+
+  return newData;
+};
+
+export {
+  createReservation,
+  getReservations,
+  deleteReservation,
+  updateReservation,
+};
