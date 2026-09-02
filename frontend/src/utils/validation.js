@@ -69,3 +69,28 @@ export function validateForm(formData) {
 
   return errors;
 }
+
+export function validateReservationUpdate({ date, time, guests }) {
+  const today = new Date().toISOString().split("T")[0];
+
+  const errors = {
+    date: !date
+      ? "La fecha es obligatoria."
+      : date < today
+        ? "La fecha no puede ser anterior a hoy."
+        : "",
+
+    time: !time
+      ? "La hora es obligatoria."
+      : !reservationTimes.includes(time)
+        ? "Selecciona un horario válido."
+        : "",
+
+    guests:
+      Number(guests) < 1 || Number(guests) > 20
+        ? "El número de personas debe estar entre 1 y 20."
+        : "",
+  };
+
+  return errors;
+}
