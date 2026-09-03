@@ -201,6 +201,12 @@
 }
 
 @media screen and (max-width: 500px) {
+  .my-reservations__title {
+    font-size: 54px;
+    line-height: 0.86;
+    overflow-wrap: anywhere;
+  }
+
   .reservation-card {
     grid-template-columns: 1fr;
   }

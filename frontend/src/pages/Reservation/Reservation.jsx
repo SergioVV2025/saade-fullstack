@@ -129,6 +129,16 @@ function Reservation() {
     }
   }
 
+  const formattedConfirmationDate = confirmedReservation?.date
+    ? new Date(
+        `${confirmedReservation.date.split("T")[0]}T00:00:00`,
+      ).toLocaleDateString("es-MX", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
   return (
     <main className="reservation-page">
       <section className="reservation-page__intro">
@@ -278,11 +288,39 @@ function Reservation() {
         isOpen={isConfirmationOpen}
         onClose={() => setIsConfirmationOpen(false)}
       >
-        <h2>¡Reserva confirmada!</h2>
-        <p>Nombre: {confirmedReservation?.name}</p>
-        <p>Fecha: {confirmedReservation?.date}</p>
-        <p>Hora: {confirmedReservation?.time}</p>
-        <p>Personas: {confirmedReservation?.guests}</p>
+        <div className="confirmation-popup">
+          <p className="confirmation-popup__eyebrow">YOUR TABLE IS READY</p>
+
+          <h2 className="confirmation-popup__title">
+            ¡Reserva
+            <br />
+            confirmada!
+          </h2>
+
+          <p className="confirmation-popup__text">Nos vemos pronto en Saade.</p>
+
+          <div className="confirmation-popup__details">
+            <div className="confirmation-popup__detail">
+              <span className="confirmation-popup__label">Nombre</span>
+              <span>{confirmedReservation?.name}</span>
+            </div>
+
+            <div className="confirmation-popup__detail">
+              <span className="confirmation-popup__label">Fecha</span>
+              <span>{formattedConfirmationDate}</span>
+            </div>
+
+            <div className="confirmation-popup__detail">
+              <span className="confirmation-popup__label">Hora</span>
+              <span>{confirmedReservation?.time}</span>
+            </div>
+
+            <div className="confirmation-popup__detail">
+              <span className="confirmation-popup__label">Personas</span>
+              <span>{confirmedReservation?.guests}</span>
+            </div>
+          </div>
+        </div>
       </Popup>
     </main>
   );
