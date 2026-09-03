@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { reservationTimes } from "../../utils/reservationConstants";
 import { validateReservationUpdate } from "../../utils/validation";
 import Popup from "../../components/Popup/Popup";
+import "../../blocks/myReservations.css";
 
 import {
   getReservations,
@@ -166,121 +167,255 @@ function MyReservations() {
   }
 
   return (
-    <main>
-      <h1>Mis reservaciones</h1>
+    <main className="my-reservations">
+      <section className="my-reservations__intro">
+        <p className="my-reservations__eyebrow">YOUR TABLES</p>
 
-      {isLoading && <p>Cargando reservaciones...</p>}
+        <h1 className="my-reservations__title">
+          Mis
+          <br />
+          reservaciones
+        </h1>
 
-      {error && <p>{error}</p>}
+        <p className="my-reservations__description">
+          Consulta, modifica o cancela tus próximas visitas a Saade.
+        </p>
+      </section>
 
-      {!isLoading && !error && reservations.length === 0 && (
-        <p>No tienes reservaciones.</p>
+      {isLoading && (
+        <p className="my-reservations__status">Cargando reservaciones...</p>
       )}
 
-      {!isLoading &&
-        !error &&
-        reservations.map((reservation) => (
-          <article key={reservation._id}>
-            <h2>{reservation.name}</h2>
-            <p>Fecha: {reservation.date}</p>
-            <p>Hora: {reservation.time}</p>
-            <p>Personas: {reservation.guests}</p>
-            <button
-              type="button"
-              onClick={() => {
-                setEditError("");
-                setEditingReservation(reservation);
-                setEditDate(reservation.date.split("T")[0]);
-                setEditTime(reservation.time);
-                setEditGuests(reservation.guests);
-              }}
-            >
-              Editar
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setDeleteError("");
-                setReservationToDelete(reservation);
-              }}
-            >
-              Cancelar
-            </button>
-          </article>
-        ))}
+      {error && (
+        <p className="my-reservations__status my-reservations__status_error">
+          {error}
+        </p>
+      )}
+
+      {!isLoading && !error && reservations.length === 0 && (
+        <div className="my-reservations__empty">
+          <p className="my-reservations__empty-title">
+            Todavía no tienes reservaciones.
+          </p>
+
+          <p className="my-reservations__empty-text">
+            Cuando reserves una mesa, aparecerá aquí.
+          </p>
+        </div>
+      )}
+
+      {!isLoading && !error && reservations.length > 0 && (
+        <section className="my-reservations__list">
+          {reservations.map((reservation, index) => {
+            const reservationDate = new Date(
+              `${reservation.date.split("T")[0]}T00:00:00`,
+            );
+
+            const formattedDate = reservationDate.toLocaleDateString("es-MX", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            });
+
+            return (
+              <article className="reservation-card" key={reservation._id}>
+                <div className="reservation-card__number">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+
+                <div className="reservation-card__content">
+                  <p className="reservation-card__eyebrow">RESERVATION</p>
+
+                  <h2 className="reservation-card__name">{reservation.name}</h2>
+
+                  <div className="reservation-card__details">
+                    <div className="reservation-card__detail">
+                      <span className="reservation-card__label">Fecha</span>
+
+                      <span>{formattedDate}</span>
+                    </div>
+
+                    <div className="reservation-card__detail">
+                      <span className="reservation-card__label">Hora</span>
+
+                      <span>{reservation.time}</span>
+                    </div>
+
+                    <div className="reservation-card__detail">
+                      <span className="reservation-card__label">Personas</span>
+
+                      <span>{reservation.guests}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="reservation-card__actions">
+                  <button
+                    className="reservation-card__button reservation-card__button_edit"
+                    type="button"
+                    onClick={() => {
+                      setEditError("");
+                      setEditingReservation(reservation);
+                      setEditDate(reservation.date.split("T")[0]);
+                      setEditTime(reservation.time);
+                      setEditGuests(reservation.guests);
+                    }}
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    className="reservation-card__button reservation-card__button_cancel"
+                    type="button"
+                    onClick={() => {
+                      setDeleteError("");
+                      setReservationToDelete(reservation);
+                    }}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
       <Popup isOpen={reservationToDelete !== null} onClose={closeDeletePopup}>
-        <h2>Cancelar reservación</h2>
+        <div className="delete-popup">
+          <p className="delete-popup__eyebrow">ARE YOU SURE?</p>
 
-        <p>¿Seguro que quieres cancelar esta reservación?</p>
+          <h2 className="delete-popup__title">
+            Cancelar
+            <br />
+            reservación
+          </h2>
 
-        <button type="button" onClick={closeDeletePopup}>
-          No, conservar
-        </button>
+          <p className="delete-popup__text">
+            Esta acción eliminará tu reservación.
+            <br />
+            ¿Quieres continuar?
+          </p>
 
-        <button
-          type="button"
-          onClick={() => handleDelete(reservationToDelete._id)}
-          disabled={isDeleting}
-        >
-          {isDeleting ? "Cancelando..." : "Sí, cancelar"}
-        </button>
-        {deleteError && <p className="popup__error">{deleteError}</p>}
+          <div className="delete-popup__actions">
+            <button
+              className="delete-popup__button delete-popup__button_keep"
+              type="button"
+              onClick={closeDeletePopup}
+            >
+              No, conservar
+            </button>
+
+            <button
+              className="delete-popup__button delete-popup__button_cancel"
+              type="button"
+              onClick={() => handleDelete(reservationToDelete._id)}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Cancelando..." : "Sí, cancelar"}
+            </button>
+          </div>
+
+          {deleteError && <p className="popup__error">{deleteError}</p>}
+        </div>
       </Popup>
       <Popup isOpen={editingReservation !== null} onClose={closeEditPopup}>
-        <h2>Editar reservación</h2>
+        <div className="edit-reservation">
+          <p className="edit-reservation__eyebrow">YOUR TABLE</p>
 
-        <label>
-          Fecha:
-          <input
-            type="date"
-            min={today}
-            value={editDate}
-            onChange={(event) => setEditDate(event.target.value)}
-          />
-        </label>
-        {editFormErrors.date && (
-          <p className="popup__error">{editFormErrors.date}</p>
-        )}
+          <h2 className="edit-reservation__title">Editar reservación</h2>
 
-        <label>
-          Hora:
-          <select
-            value={editTime}
-            onChange={(event) => setEditTime(event.target.value)}
-          >
-            {reservationTimes.map((time) => (
-              <option key={time} value={time}>
-                {time}
-              </option>
-            ))}
-          </select>
-        </label>
-        {editFormErrors.time && (
-          <p className="popup__error">{editFormErrors.time}</p>
-        )}
+          <div className="edit-reservation__form">
+            <label className="edit-reservation__field">
+              <span className="edit-reservation__label">Fecha</span>
 
-        <label>
-          Personas:
-          <input
-            type="number"
-            min="1"
-            max="20"
-            value={editGuests}
-            onChange={(event) => setEditGuests(event.target.value)}
-          />
-        </label>
-        {editFormErrors.guests && (
-          <p className="popup__error">{editFormErrors.guests}</p>
-        )}
+              <input
+                className={`edit-reservation__input ${
+                  editFormErrors.date ? "edit-reservation__input_error" : ""
+                }`}
+                type="date"
+                min={today}
+                value={editDate}
+                onChange={(event) => setEditDate(event.target.value)}
+              />
 
-        <button type="button" onClick={closeEditPopup}>
-          Cancelar
-        </button>
+              {editFormErrors.date && (
+                <span className="edit-reservation__error">
+                  {editFormErrors.date}
+                </span>
+              )}
+            </label>
 
-        <button type="button" onClick={handleUpdate} disabled={isUpdating}>
-          {isUpdating ? "Guardando..." : "Guardar"}
-        </button>
-        {editError && <p className="popup__error">{editError}</p>}
+            <label className="edit-reservation__field">
+              <span className="edit-reservation__label">Hora</span>
+
+              <select
+                className={`edit-reservation__input ${
+                  editFormErrors.time ? "edit-reservation__input_error" : ""
+                }`}
+                value={editTime}
+                onChange={(event) => setEditTime(event.target.value)}
+              >
+                {reservationTimes.map((time) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </select>
+
+              {editFormErrors.time && (
+                <span className="edit-reservation__error">
+                  {editFormErrors.time}
+                </span>
+              )}
+            </label>
+
+            <label className="edit-reservation__field">
+              <span className="edit-reservation__label">Personas</span>
+
+              <input
+                className={`edit-reservation__input ${
+                  editFormErrors.guests ? "edit-reservation__input_error" : ""
+                }`}
+                type="number"
+                min="1"
+                max="20"
+                value={editGuests}
+                onChange={(event) => setEditGuests(event.target.value)}
+              />
+
+              {editFormErrors.guests && (
+                <span className="edit-reservation__error">
+                  {editFormErrors.guests}
+                </span>
+              )}
+            </label>
+
+            {editError && (
+              <p className="edit-reservation__error edit-reservation__error_general">
+                {editError}
+              </p>
+            )}
+
+            <div className="edit-reservation__actions">
+              <button
+                className="edit-reservation__button edit-reservation__button_secondary"
+                type="button"
+                onClick={closeEditPopup}
+              >
+                Cancelar
+              </button>
+
+              <button
+                className="edit-reservation__button edit-reservation__button_primary"
+                type="button"
+                onClick={handleUpdate}
+                disabled={isUpdating}
+              >
+                {isUpdating ? "Guardando..." : "Guardar"}
+              </button>
+            </div>
+          </div>
+        </div>
       </Popup>
     </main>
   );

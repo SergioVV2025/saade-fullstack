@@ -31,7 +31,7 @@ function Popup({ isOpen, onClose, children }) {
       className={`popup ${isOpen ? "popup_is-opened" : ""}`}
       onMouseDown={handleOverlayClose}
     >
-      <div className="popup__content popup__content_confirmation">
+      <div className="popup__content">
         <button
           className="popup__close"
           type="button"

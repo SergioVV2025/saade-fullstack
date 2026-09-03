@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import Popup from "../Popup/Popup";
 
+import "../../blocks/signinPopup.css";
+
 function SignupPopup({ isOpen, onClose, onSignup, error }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -10,6 +12,7 @@ function SignupPopup({ isOpen, onClose, onSignup, error }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
+
     const isSuccess = await onSignup(name, email, password, confirmPassword);
 
     if (!isSuccess) {
@@ -24,42 +27,71 @@ function SignupPopup({ isOpen, onClose, onSignup, error }) {
 
   return (
     <Popup isOpen={isOpen} onClose={onClose}>
-      <h2>Crear cuenta</h2>
+      <div className="auth-popup">
+        <p className="auth-popup__eyebrow">JOIN THE TABLE</p>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          required
-        />
+        <h2 className="auth-popup__title">Crear cuenta</h2>
 
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-        />
+        <form className="auth-popup__form" onSubmit={handleSubmit}>
+          <label className="auth-popup__field">
+            <span className="auth-popup__label">Nombre</span>
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.target.value)}
-          required
-        />
-        {error && <p className="popup__error">{error}</p>}
-        <button type="submit">Registrarme</button>
-      </form>
+            <input
+              className="auth-popup__input"
+              type="text"
+              placeholder="Tu nombre"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+            />
+          </label>
+
+          <label className="auth-popup__field">
+            <span className="auth-popup__label">Correo electrónico</span>
+
+            <input
+              className="auth-popup__input"
+              type="email"
+              placeholder="tu@email.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </label>
+
+          <label className="auth-popup__field">
+            <span className="auth-popup__label">Contraseña</span>
+
+            <input
+              className="auth-popup__input"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </label>
+
+          <label className="auth-popup__field">
+            <span className="auth-popup__label">Confirmar contraseña</span>
+
+            <input
+              className="auth-popup__input"
+              type="password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              required
+            />
+          </label>
+
+          {error && <p className="auth-popup__error">{error}</p>}
+
+          <button className="auth-popup__submit" type="submit">
+            Registrarme
+          </button>
+        </form>
+      </div>
     </Popup>
   );
 }
